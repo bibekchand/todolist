@@ -25,6 +25,11 @@ auth = OAuth2PasswordBearer(tokenUrl="token")
 engine = create_engine(DATABASE_URL, echo=True)
 
 
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()
     if expires_delta:
@@ -32,7 +37,7 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     else:
         expire = datetime.now(timezone.utc) + timedelta(minutes=15)
         to_encode.update({"exp": expire})
-        encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
 
@@ -49,8 +54,7 @@ def get_session():
         yield session
 
 
-def autheticate_user(username: str, password: str):
-    session = get_session()
+def autheticate_user(username: str, password: str, session):
     user = session.get(User, username)
     if not user:
         return False
@@ -95,9 +99,31 @@ def add_new_user(user: UserCreate, session: SessionDep):
     else:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT,
                             detail="Username already taken")
-    return {"message": "User registered"}
+    return {"message": "Created"}
 
 
 @app.post("/token")
-async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends(OAuth2PasswordRequestForm)]):
-    return {"access_token": form_data.username, "token_type": "bearer"}
+async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends(OAuth2PasswordRequestForm)], session: SessionDep) -> Token:
+    user = autheticate_user(form_data.username, form_data.password, session)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"}
+        )
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(
+        data={"sub": form_data.username},
+        expires_delta=access_token_expires)
+    return Token(access_token=access_token, token_type="bearer")
+
+
+@app.get("/users")
+async def get_users_data(token: Annotated[str, Depends(auth)]):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username = payload.get("sub")
+        return {"message": username}
+    except InvalidTokenError:
+        raise HTTPException(status_code=status.HTTP.HTTP_401_UNAUTHORIZED)
+    return {"message": "successful"}
