@@ -10,7 +10,12 @@ export default function App() {
 		const searchText = formData.get("searchText");
 		console.log(searchText);
 		axios
-			.get(`http://localhost:8000/searchTasks?searchText=${searchText}`)
+			.get(`http://localhost:8000/searchTasks?searchText=${searchText}`,
+                {
+                    headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`
+                    },
+                })
 			.then((response) => {
 				console.log(response);
 				setSearchedTaskList(response.data);
@@ -21,7 +26,12 @@ export default function App() {
 	}
 	function fetchDataFromServer() {
 		console.log("Fetched data from server");
-		axios.get("http://localhost:8000/get_list/").then((response) => {
+		axios.get("http://localhost:8000/get_list/",
+            {
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`
+                },
+            }).then((response) => {
 			console.log(response);
 			setTaskList(response.data);
 		});
@@ -43,6 +53,10 @@ export default function App() {
 		fetchDataFromServer();
 	}
 	useEffect(() => {
+        const token = localStorage.getItem("token")
+        if (!token) {
+            navigate("/login")
+        }
 		fetchDataFromServer();
 	}, []);
 	return (

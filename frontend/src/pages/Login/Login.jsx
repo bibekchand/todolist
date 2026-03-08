@@ -1,6 +1,8 @@
 import axios from "axios";
+import { useNavigate }  from "react-router";
 import { useEffect, useState } from "react";
 export default function Login() {
+    const navigate = useNavigate()
 	const [loginFailed, setLoginFailed] = useState(false);
 	useEffect(() => {
 		if (loginFailed) {
@@ -26,9 +28,9 @@ export default function Login() {
 			)
 			.then((response) => {
 				console.log(response.data);
-                token = response.data.access_token
+                const token = response.data.access_token
                 localStorage.setItem("token", token)
-                setLoginFailed(false)
+                navigate("/")
 				console.log("Logged in successfully");
 			})
 			.catch((error) => {
