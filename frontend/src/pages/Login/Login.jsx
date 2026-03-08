@@ -1,8 +1,8 @@
 import axios from "axios";
-import { useNavigate }  from "react-router";
 import { useEffect, useState } from "react";
+import { useNavigate, Link } from "react-router";
 export default function Login() {
-    const navigate = useNavigate()
+	const navigate = useNavigate();
 	const [loginFailed, setLoginFailed] = useState(false);
 	useEffect(() => {
 		if (loginFailed) {
@@ -28,14 +28,14 @@ export default function Login() {
 			)
 			.then((response) => {
 				console.log(response.data);
-                const token = response.data.access_token
-                localStorage.setItem("token", token)
-                navigate("/")
+				const token = response.data.access_token;
+				localStorage.setItem("token", token);
+				navigate("/");
 				console.log("Logged in successfully");
 			})
 			.catch((error) => {
 				console.log(error);
-                setLoginFailed(true)
+				setLoginFailed(true);
 				console.log("Login failed");
 			});
 	}
@@ -61,6 +61,9 @@ export default function Login() {
 					Login
 				</button>
 				{loginFailed && <div className="text-red-500">Login Failed</div>}
+				<Link to="/register" className="underline text-blue-700 cursor-pointer">
+					Don't have an account?
+				</Link>
 			</form>
 		</div>
 	);

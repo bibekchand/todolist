@@ -1,40 +1,55 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router"
+import { useNavigate } from "react-router";
 import ViewTask from "../../components/ViewTask/ViewTask.jsx";
 export default function App() {
-    const navigate = useNavigate()
+	const navigate = useNavigate();
+	const [username, setUsername] = useState("NA");
+    const [userEmail, setUserEmail]= useState("NA");
 	const [searchedTaskList, setSearchedTaskList] = useState([]);
 	const [taskList, setTaskList] = useState([]);
 	function searchTasks(formData) {
 		const searchText = formData.get("searchText");
 		console.log(searchText);
 		axios
-			.get(`http://localhost:8000/searchTasks?searchText=${searchText}`,
-                {
-                    headers: {
-                    "Authorization": `Bearer ${localStorage.getItem("token")}`
-                    },
-                })
+			.get(`http://localhost:8000/searchTasks?searchText=${searchText}`, {
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+			})
 			.then((response) => {
 				console.log(response);
 				setSearchedTaskList(response.data);
 			})
-			.catch((error) => {
+			.catch(() => {
 				console.log("Error");
+			});
+	}
+    //Fetch info it can also be done the other way but let's do this to decode from token
+	function fetchUserInfo() {
+		axios
+			.get("http://localhost:8000/get_current_user", {
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+			})
+			.then((response) => {
+				setUsername(response.data.user);
+                setUserEmail(response.data.email);
 			});
 	}
 	function fetchDataFromServer() {
 		console.log("Fetched data from server");
-		axios.get("http://localhost:8000/get_list/",
-            {
-                headers: {
-                    "Authorization": `Bearer ${localStorage.getItem("token")}`
-                },
-            }).then((response) => {
-			console.log(response);
-			setTaskList(response.data);
-		});
+		axios
+			.get("http://localhost:8000/get_list/", {
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+			})
+			.then((response) => {
+				console.log(response);
+				setTaskList(response.data);
+			});
 	}
 	function postDataToServer(formData) {
 		axios
@@ -53,14 +68,16 @@ export default function App() {
 		fetchDataFromServer();
 	}
 	useEffect(() => {
-        const token = localStorage.getItem("token")
-        if (!token) {
-            navigate("/login")
-        }
+		const token = localStorage.getItem("token");
+		if (!token) {
+			navigate("/login");
+		}
+        fetchUserInfo()
 		fetchDataFromServer();
 	}, []);
 	return (
 		<>
+			<div>user: {username}, email: {userEmail}</div>
 			<form action={searchTasks}>
 				<div className="p-2 flex justify-center">
 					<input type="text" name="searchText" className="border-2" />
