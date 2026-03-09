@@ -194,3 +194,23 @@ def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], session: S
         data={"sub": form_data.username},
         expires_delta=access_token_expires)
     return Token(access_token=access_token, token_type="bearer")
+
+
+@app.get("/get_current_user")
+def get_current_user(token: Annotated[str, Depends(auth)], session: SessionDep):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username = payload.get("sub")
+        if not username:
+            raise credentials_exception
+    except InvalidTokenError:
+        raise credentials_exception
+    user = session.get(User, username)
+    if not user:
+        raise credentials_exception
+    return {"user": user.username, "email": user.email}

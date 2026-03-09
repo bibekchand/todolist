@@ -1,11 +1,14 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router";
+import toast, { Toaster } from "react-hot-toast";
 export default function Login() {
+    const notify = () => toast.error("Login Failed")
 	const navigate = useNavigate();
 	const [loginFailed, setLoginFailed] = useState(false);
 	useEffect(() => {
 		if (loginFailed) {
+            notify();
 			setTimeout(() => {
 				setLoginFailed(false);
 			}, 2000);
@@ -60,11 +63,11 @@ export default function Login() {
 				>
 					Login
 				</button>
-				{loginFailed && <div className="text-red-500">Login Failed</div>}
 				<Link to="/register" className="underline text-blue-700 cursor-pointer">
 					Don't have an account?
 				</Link>
 			</form>
+        <Toaster position="bottom-center"/>
 		</div>
 	);
 }
