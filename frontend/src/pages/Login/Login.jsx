@@ -3,12 +3,12 @@ import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router";
 import toast, { Toaster } from "react-hot-toast";
 export default function Login() {
-    const notify = () => toast.error("Login Failed")
+	const notify = () => toast.error("Login Failed");
 	const navigate = useNavigate();
 	const [loginFailed, setLoginFailed] = useState(false);
 	useEffect(() => {
 		if (loginFailed) {
-            notify();
+			notify();
 			setTimeout(() => {
 				setLoginFailed(false);
 			}, 2000);
@@ -43,31 +43,37 @@ export default function Login() {
 			});
 	}
 	return (
-		<div className="flex justify-center p-2">
-			<form action={login} className="flex flex-col gap-2 justify-center">
-				<input
-					type="text"
-					placeholder="Username"
-					name="username"
-					className="border-2 p-0.5"
-				/>
-				<input
-					type="text"
-					placeholder="Password"
-					name="password"
-					className="border-2 p-0.5"
-				/>
-				<button
-					type="submit"
-					className="border-2 shadow shadow-amber-800 active:shadow-amber-50"
-				>
-					Login
-				</button>
-				<Link to="/register" className="underline text-blue-700 cursor-pointer">
-					Don't have an account?
-				</Link>
-			</form>
-        <Toaster position="bottom-center"/>
-		</div>
+		<>
+			<div className="w-fit m-auto text-2xl">Login</div>
+			<div className="flex justify-center p-2">
+				<form action={login} className="flex flex-col gap-2 justify-center">
+					<input
+						type="text"
+						placeholder="Username"
+						name="username"
+						className="border-2 p-0.5"
+					/>
+					<input
+						type="text"
+						placeholder="Password"
+						name="password"
+						className="border-2 p-0.5"
+					/>
+					<button
+						type="submit"
+						className="border-2 shadow shadow-amber-800 active:shadow-amber-50"
+					>
+						Login
+					</button>
+					<Link
+						to="/register"
+						className="underline text-blue-700 cursor-pointer"
+					>
+						Don't have an account?
+					</Link>
+				</form>
+				<Toaster position="bottom-center" />
+			</div>
+		</>
 	);
 }
