@@ -8,12 +8,12 @@ export default function Register() {
 			.post("http://localhost:8000/sign_up", {
 				username: formData.get("username"),
 				password: formData.get("password"),
-				email: formData.get("email"),
+				email: formData.get("email") || "NA",
 			})
 			.then((response) => {
-                console.log("Succesfull")
+                console.log("Succesful")
                 console.log(response)
-				toast.success("Logged in successfully");
+				toast.success("Registered successfully");
 				setTimeout(() => {
 					navigate("/login");
 				}, 1000);

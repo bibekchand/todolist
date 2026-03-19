@@ -5,7 +5,7 @@ import ViewTask from "../../components/ViewTask/ViewTask.jsx";
 export default function App() {
 	const navigate = useNavigate();
 	const [username, setUsername] = useState("NA");
-    const [userEmail, setUserEmail]= useState("NA");
+	const [userEmail, setUserEmail] = useState("NA");
 	const [searchedTaskList, setSearchedTaskList] = useState([]);
 	const [taskList, setTaskList] = useState([]);
 	function searchTasks(formData) {
@@ -25,7 +25,7 @@ export default function App() {
 				console.log("Error");
 			});
 	}
-    //Fetch info it can also be done the other way but let's do this to decode from token
+	//Fetch info it can also be done the other way but let's do this to decode from token
 	function fetchUserInfo() {
 		axios
 			.get("http://localhost:8000/get_current_user", {
@@ -35,7 +35,7 @@ export default function App() {
 			})
 			.then((response) => {
 				setUsername(response.data.user);
-                setUserEmail(response.data.email);
+				setUserEmail(response.data.email);
 			});
 	}
 	function fetchDataFromServer() {
@@ -72,12 +72,14 @@ export default function App() {
 		if (!token) {
 			navigate("/login");
 		}
-        fetchUserInfo()
+		fetchUserInfo();
 		fetchDataFromServer();
 	}, []);
 	return (
 		<>
-			<div>user: {username}, email: {userEmail}</div>
+			<div>
+				user: {username}, email: {userEmail}
+			</div>
 			<form action={searchTasks}>
 				<div className="p-2 flex justify-center">
 					<input type="text" name="searchText" className="border-2" />

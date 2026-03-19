@@ -33,13 +33,13 @@ def handleAuthorization(token, session) -> bool:
             raise credentials_exception
     except InvalidTokenError:
         raise credentials_exception
-    user = session.get(User, username)
+    user = session.get(UserTable, username)
     if not user:
         raise credentials_exception
     return True
 
 
-class User(SQLModel, table=True):
+class UserTable(SQLModel, table=True):
     username: str = Field(primary_key=True)
     password: str
     email: str
@@ -48,7 +48,7 @@ class User(SQLModel, table=True):
 class UserCreate(BaseModel):
     username: str = Field(min_length=1)
     password: str
-    email: str = Field(min_length=1)
+    email: str | None = Field(min_length=1)
 
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
@@ -64,7 +64,7 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
 
 def autheticate_user(username: str, password: str, session):
     print("Authenticating User")
-    user = session.get(User, username)
+    user = session.get(UserTable, username)
     if not user:
         print("No User")
         return False
@@ -86,7 +86,7 @@ class todolistBase(SQLModel):
     status: bool | None = Field(default=None, index=True)
 
 
-class todolist(todolistBase, table=True):
+class TodolistTable(todolistBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
 
 
@@ -125,21 +125,21 @@ def on_startup():
 
 @app.post("/addTask", response_model=todolistBase)
 async def add_task(task: todolistBase, token: Annotated[str, Depends(auth)], session: SessionDep):
-    db_task = todolist.model_validate(task)
+    db_task = TodolistTable.model_validate(task)
     session.add(db_task)
     session.commit()
     session.refresh(db_task)
     return db_task
 
 
-@app.get("/searchTasks", response_model=list[todolist])
+@app.get("/searchTasks", response_model=list[TodolistTable])
 async def searchTasks(token: Annotated[str, Depends(auth)], searchText: str, session: SessionDep):
     if handleAuthorization(token, session):
         if not searchText:
             return []
-        statement = select(todolist).where(
-            or_(todolist.title.contains(searchText),
-                todolist.description.contains(searchText)))
+        statement = select(TodolistTable).where(
+            or_(TodolistTable.title.contains(searchText),
+                TodolistTable.description.contains(searchText)))
         results = session.exec(statement)
         searchedTasks = results.all()
         print("Searched Tasks=>", searchedTasks)
@@ -151,14 +151,15 @@ def read_heroes(token:  Annotated[str, Depends(auth)],
                 session: SessionDep,
                 offset: int = 0,
                 limit: Annotated[int, Query(le=100)] = 100,
-                ) -> list[todolist]:
-    lists = session.exec(select(todolist).offset(offset).limit(limit)).all()
+                ) -> list[TodolistTable]:
+    lists = session.exec(
+        select(TodolistTable).offset(offset).limit(limit)).all()
     return lists
 
 
 @app.delete("/delete_list/{id}")
 def delete_list(id: int, session: SessionDep):
-    list = session.get(todolist, id)
+    list = session.get(TodolistTable, id)
     session.delete(list)
     session.commit()
     return {"ok": True}
@@ -166,8 +167,8 @@ def delete_list(id: int, session: SessionDep):
 
 @app.post("/sign_up")
 def add_new_user(user: UserCreate, session: SessionDep):
-    db_user = User(**user.model_dump())
-    exists = session.get(User, db_user.username)
+    db_user = UserTable(**user.model_dump())
+    exists = session.get(UserTable, db_user.username)
     if not exists:
         db_user.password = password_hash.hash(db_user.password)
         session.add(db_user)
@@ -210,7 +211,7 @@ def get_current_user(token: Annotated[str, Depends(auth)], session: SessionDep):
             raise credentials_exception
     except InvalidTokenError:
         raise credentials_exception
-    user = session.get(User, username)
+    user = session.get(UserTable, username)
     if not user:
         raise credentials_exception
     return {"user": user.username, "email": user.email}

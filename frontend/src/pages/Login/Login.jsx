@@ -44,7 +44,7 @@ export default function Login() {
 	}
 	return (
 		<>
-			<div className="w-fit m-auto text-2xl">Login</div>
+			<div className="w-fit m-auto text-5xl">Login</div>
 			<div className="flex justify-center p-2">
 				<form action={login} className="flex flex-col gap-2 justify-center">
 					<input
