@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import jwt
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from jwt.exceptions import InvalidTokenError
+from jwt.exceptions import InvalidTokenError, ExpiredSignatureError
 from pwdlib import PasswordHash
 
 password_hash = PasswordHash.recommended()
@@ -17,10 +17,10 @@ auth = OAuth2PasswordBearer(tokenUrl="login")
 
 SECRET_KEY = "bff17be701d103e15ea318f6029d5ee7de7cceaff35cd67af6aca08da7a663a9"
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_MINUTES = 10
 
 
-def handleAuthorization(token, session) -> bool:
+def handleAuthorization(token, session):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -28,15 +28,18 @@ def handleAuthorization(token, session) -> bool:
     )
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        print("This is the payload", payload)
         username = payload.get("sub")
         if not username:
             raise credentials_exception
     except InvalidTokenError:
         raise credentials_exception
+    except ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="token expired")
     user = session.get(UserTable, username)
     if not user:
         raise credentials_exception
-    return True
+    return {"username": user.username, "email": user.email}
 
 
 class UserTable(SQLModel, table=True):
@@ -57,7 +60,7 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
         expire = datetime.now(timezone.utc) + expires_delta
     else:
         expire = datetime.now(timezone.utc) + timedelta(minutes=15)
-        to_encode.update({"exp": expire})
+    to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
@@ -160,9 +163,12 @@ def read_heroes(token:  Annotated[str, Depends(auth)],
 @app.delete("/delete_list/{id}")
 def delete_list(id: int, session: SessionDep):
     list = session.get(TodolistTable, id)
-    session.delete(list)
-    session.commit()
-    return {"ok": True}
+    if not list:
+        raise HTTPException(status_code=404, detail="item not found")
+    else:
+        session.delete(list)
+        session.commit()
+        return {"message": "Deleted"}
 
 
 @app.post("/sign_up")
@@ -199,19 +205,8 @@ def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], session: S
 
 @app.get("/get_current_user")
 def get_current_user(token: Annotated[str, Depends(auth)], session: SessionDep):
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username = payload.get("sub")
-        if not username:
-            raise credentials_exception
-    except InvalidTokenError:
-        raise credentials_exception
-    user = session.get(UserTable, username)
-    if not user:
-        raise credentials_exception
-    return {"user": user.username, "email": user.email}
+        userDetail = handleAuthorization(token, session)
+        return userDetail
+    except:
+        print("Token expired")
