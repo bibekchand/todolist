@@ -1,35 +1,34 @@
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router";
+import { baseURL } from "../../config.js";
 export default function Register() {
 	const navigate = useNavigate();
 	function signUp(formData) {
 		axios
-			.post("http://localhost:8000/sign_up", {
+			.post(`${baseURL}/sign_up`, {
 				username: formData.get("username"),
 				password: formData.get("password"),
 				email: formData.get("email") || "NA",
 			})
 			.then((response) => {
-                console.log("Succesful")
-                console.log(response)
+				console.log("Succesful");
+				console.log(response);
 				toast.success("Registered successfully");
 				setTimeout(() => {
 					navigate("/login");
 				}, 1000);
 			})
 			.catch((error) => {
-                console.log("Error")
-                console.log("Error=>", error.response.status)
-                if (error.response.status === 409) {
-                    toast.error("Choose another username")
-                }
-                else if (error.response.status === 422) {
-                    toast.error("Form not valid")
-                }
-                else {
-                    toast.error("Unkown error")
-                }
+				console.log("Error");
+				console.log("Error=>", error.response.status);
+				if (error.response.status === 409) {
+					toast.error("Choose another username");
+				} else if (error.response.status === 422) {
+					toast.error("Form not valid");
+				} else {
+					toast.error("Unkown error");
+				}
 			});
 	}
 	return (

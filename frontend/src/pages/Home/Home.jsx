@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import ViewTask from "../../components/ViewTask/ViewTask.jsx";
 import ViewModal from "../../components/Modal/ViewModal.jsx";
 import toast, { Toaster } from "react-hot-toast";
+import { baseURL } from "../../config.js";
 export default function App() {
 	const navigate = useNavigate();
 	const dialogRef = useRef(null);
@@ -28,7 +29,7 @@ export default function App() {
 		const searchText = formData.get("searchText");
 		console.log(searchText);
 		axios
-			.get(`http://localhost:8000/searchTasks?searchText=${searchText}`, {
+			.get(`${baseURL}/searchTasks?searchText=${searchText}`, {
 				headers: {
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
@@ -44,7 +45,7 @@ export default function App() {
 	//Fetch info it can also be done the other way but let's do this to decode from token
 	function fetchUserInfo() {
 		axios
-			.get("http://localhost:8000/get_current_user", {
+			.get(`${baseURL}/get_current_user`, {
 				headers: {
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
@@ -60,7 +61,7 @@ export default function App() {
 	function fetchDataFromServer() {
 		console.log("Fetched data from server");
 		axios
-			.get("http://localhost:8000/get_list/", {
+			.get(`${baseURL}/get_list/`, {
 				headers: {
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
@@ -72,7 +73,7 @@ export default function App() {
 	}
 	function postDataToServer(formData) {
 		axios
-			.post("http://localhost:8000/addTask", {
+			.post(`${baseURL}/addTask`, {
 				title: formData.get("title"),
 				description: formData.get("description"),
 				time: formData.get("time"),

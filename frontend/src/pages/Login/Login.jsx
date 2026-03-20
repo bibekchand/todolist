@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router";
 import toast, { Toaster } from "react-hot-toast";
+import { baseURL } from "../../config.js";
 export default function Login() {
 	const notify = () => toast.error("Login Failed");
 	const navigate = useNavigate();
@@ -18,7 +19,7 @@ export default function Login() {
 		console.log(formData.get("username"));
 		axios
 			.post(
-				"http://localhost:8000/login",
+				`${baseURL}/login`,
 				{
 					username: formData.get("username"),
 					password: formData.get("password"),
