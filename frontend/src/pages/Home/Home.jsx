@@ -1,15 +1,15 @@
-import axios from "axios";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef } from "react";
+import { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router";
-import ViewTask from "../../components/ViewTask/ViewTask.jsx";
 import ViewModal from "../../components/Modal/ViewModal.jsx";
-import toast, { Toaster } from "react-hot-toast";
 import ProfileCard from "../../components/ProfileCard.jsx";
-import { baseURL } from "../../config.js";
+import ViewTask from "../../components/ViewTask/ViewTask.jsx";
 import useTasks from "../../hooks/useTasks.jsx";
+import useUser from "../../hooks/useUser.jsx";
 export default function App() {
 	const navigate = useNavigate();
 	const dialogRef = useRef(null);
+	const [fetchUserInfo, signOut] = useUser();
 	const [
 		taskList,
 		searchedTaskList,
@@ -25,28 +25,7 @@ export default function App() {
 			? dialogRef.current.close()
 			: dialogRef.current.showModal();
 	}
-	function signOut() {
-		localStorage.clear();
-		navigate("/login");
-	}
-	const [username, setUsername] = useState("NA");
-	const [userEmail, setUserEmail] = useState("NA");
 	//Fetch info it can also be done the other way but let's do this to decode from token
-	function fetchUserInfo() {
-		axios
-			.get(`${baseURL}/get_current_user`, {
-				headers: {
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
-			})
-			.then((response) => {
-				setUsername(response.data.username);
-				setUserEmail(response.data.email);
-			})
-			.catch(() => {
-				toast.error("Token expired, please login again");
-			});
-	}
 	useEffect(() => {
 		const token = localStorage.getItem("token");
 		if (!token) navigate("/login");
