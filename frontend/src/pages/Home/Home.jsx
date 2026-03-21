@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import ViewTask from "../../components/ViewTask/ViewTask.jsx";
 import ViewModal from "../../components/Modal/ViewModal.jsx";
 import toast, { Toaster } from "react-hot-toast";
+import ProfileCard from "../../components/ProfileCard.jsx";
 import { baseURL } from "../../config.js";
 export default function App() {
 	const navigate = useNavigate();
@@ -12,7 +13,6 @@ export default function App() {
 		if (!dialogRef.current) {
 			return;
 		}
-		console.log("I am clicked");
 		dialogRef.current.hasAttribute("open")
 			? dialogRef.current.close()
 			: dialogRef.current.showModal();
@@ -98,6 +98,7 @@ export default function App() {
 	}, []);
 	return (
 		<>
+				<ProfileCard />
 			<div
 				className="text-4xl fixed bottom-0 right-0 h-fit w-fit bg-gray-600 p-2 m-2 rounded-full hover:after:content-['AddTask'] transition-all duration-100 ease-in-out cursor-pointer"
 				onClick={toggleDialog}
