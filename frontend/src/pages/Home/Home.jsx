@@ -6,9 +6,17 @@ import ViewModal from "../../components/Modal/ViewModal.jsx";
 import toast, { Toaster } from "react-hot-toast";
 import ProfileCard from "../../components/ProfileCard.jsx";
 import { baseURL } from "../../config.js";
+import useTasks from "../../hooks/useTasks.jsx";
 export default function App() {
 	const navigate = useNavigate();
 	const dialogRef = useRef(null);
+	const [
+		taskList,
+		searchedTaskList,
+		addTask,
+		searchTasks,
+		fetchUsersAllTaskList,
+	] = useTasks();
 	function toggleDialog() {
 		if (!dialogRef.current) {
 			return;
@@ -23,25 +31,6 @@ export default function App() {
 	}
 	const [username, setUsername] = useState("NA");
 	const [userEmail, setUserEmail] = useState("NA");
-	const [searchedTaskList, setSearchedTaskList] = useState([]);
-	const [taskList, setTaskList] = useState([]);
-	function searchTasks(formData) {
-		const searchText = formData.get("searchText");
-		console.log(searchText);
-		axios
-			.get(`${baseURL}/searchTasks?searchText=${searchText}`, {
-				headers: {
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
-			})
-			.then((response) => {
-				console.log(response);
-				setSearchedTaskList(response.data);
-			})
-			.catch(() => {
-				console.log("Error");
-			});
-	}
 	//Fetch info it can also be done the other way but let's do this to decode from token
 	function fetchUserInfo() {
 		axios
@@ -58,47 +47,17 @@ export default function App() {
 				toast.error("Token expired, please login again");
 			});
 	}
-	function fetchDataFromServer() {
-		console.log("Fetched data from server");
-		axios
-			.get(`${baseURL}/get_list/`, {
-				headers: {
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
-			})
-			.then((response) => {
-				console.log(response);
-				setTaskList(response.data);
-			});
-	}
-	function postDataToServer(formData) {
-		axios
-			.post(`${baseURL}/addTask`, {
-				title: formData.get("title"),
-				description: formData.get("description"),
-				time: formData.get("time"),
-				status: formData.get("status") === "on" ? true : false,
-			})
-			.then(() => {
-				console.log("Sent data to server");
-			})
-			.catch((error) => {
-				console.log(error);
-			});
-		fetchDataFromServer();
-	}
 	useEffect(() => {
 		const token = localStorage.getItem("token");
-		if (!token) {
-			navigate("/login");
-		} else {
+		if (!token) navigate("/login");
+		else {
 			fetchUserInfo();
-			fetchDataFromServer();
+			fetchUsersAllTaskList();
 		}
 	}, []);
 	return (
 		<>
-				<ProfileCard />
+			<ProfileCard />
 			<div
 				className="text-4xl fixed bottom-0 right-0 h-fit w-fit bg-gray-600 p-2 m-2 rounded-full hover:after:content-['AddTask'] transition-all duration-100 ease-in-out cursor-pointer"
 				onClick={toggleDialog}
@@ -130,7 +89,7 @@ export default function App() {
 						>
 							Close
 						</button>
-						<form action={postDataToServer}>
+						<form action={addTask}>
 							<fieldset className="p-5 w-2.5 rounded-2xl flex flex-col gap-5 items-center">
 								<legend>Add Task</legend>
 								<label htmlFor="title">
@@ -182,7 +141,7 @@ export default function App() {
 						Search
 					</button>
 				</div>
-				{searchedTaskList.length !== 0 && (
+				{searchedTaskList?.length !== 0 && (
 					<div className=" pl-2.5 text-2xl">Searched Tasks</div>
 				)}
 				{searchedTaskList?.map((item) => (
@@ -196,7 +155,7 @@ export default function App() {
 					/>
 				))}
 			</form>
-			{taskList.length !== 0 && (
+			{taskList?.length !== 0 && (
 				<div className=" pl-2.5 text-2xl">All Tasks</div>
 			)}
 			{taskList?.map((item) => (
@@ -207,7 +166,7 @@ export default function App() {
 					description={item.description}
 					time={item.time}
 					status={item.status ? "Completed" : "Pending"}
-					fetchTaskList={fetchDataFromServer}
+					fetchTaskList={fetchUsersAllTaskList}
 				/>
 			))}
 
