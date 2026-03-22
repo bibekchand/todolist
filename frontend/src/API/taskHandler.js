@@ -30,7 +30,7 @@ export const getAllTaskListFromServer = () => {
 		});
 };
 export const postTaskToServer = (title, description, time, status) => {
-	axios
+	return axios
 		.post(
 			`${baseURL}/addTask`,
 			{
@@ -47,6 +47,12 @@ export const postTaskToServer = (title, description, time, status) => {
 			console.log("Sent data to server");
 		})
 		.catch((error) => {
-            throw new Error("Something went wrong with server")
+			throw new Error("Something went wrong with server");
 		});
+};
+
+export const deleteTaskFromServer = (id) => {
+	axios.delete(`http://localhost:8000/delete_list/${id}`).then((response) => {
+		console.log(response);
+	});
 };

@@ -1,4 +1,5 @@
 import axios from "axios";
+import useTasks from "../../hooks/useTasks.jsx";
 export default function ViewTask({
 	id,
 	title,
@@ -8,12 +9,7 @@ export default function ViewTask({
 	fetchTaskList,
 	showDeleteButton = true,
 }) {
-	function deletePost() {
-		axios.delete(`http://localhost:8000/delete_list/${id}`).then((response) => {
-			console.log(response);
-			fetchTaskList();
-		});
-	}
+	const [, , , , , deleteTask] = useTasks();
 	return (
 		<div className="p-4 border-2 m-2 hover:text-2xl cursor-pointer duration-500 ease-in-out">
 			<div className="flex justify-between">
@@ -24,7 +20,7 @@ export default function ViewTask({
 			<div>{status}</div>
 			{showDeleteButton && (
 				<button
-					onClick={deletePost}
+					onClick={() => deleteTask(id)}
 					type="button"
 					className="w-fit border-2 p-1 hover:text-2xl  duration-75 cursor-pointer hover:bg-gray-500 ease-in-out"
 				>

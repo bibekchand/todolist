@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { getUserInfo } from "../API/userHandler.js";
+import { getUserInfo, postLoginInfoToServer } from "../API/userHandler.js";
+import toast from "react-hot-toast"
 export default function useUser() {
 	const navigate = useNavigate();
 	const [username, setUsername] = useState("NA");
@@ -14,5 +15,14 @@ export default function useUser() {
 		localStorage.clear();
 		navigate("/login");
 	}
-	return [fetchUserInfo, signOut];
+	async function login(formData) {
+		try {
+			await postLoginInfoToServer(formData.get("username"), formData.get("password"));
+            toast.success("Logged in successfully")
+            navigate("/")
+		} catch {
+            toast.error("Log in failed")
+		}
+	}
+	return [username, userEmail, fetchUserInfo, signOut, login];
 }

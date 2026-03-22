@@ -1,48 +1,9 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router";
 import toast, { Toaster } from "react-hot-toast";
-import { baseURL } from "../../config.js";
+import { Link } from "react-router";
+import useUser from "../../hooks/useUser.jsx";
 export default function Login() {
-	const notify = () => toast.error("Login Failed");
-	const navigate = useNavigate();
-	const [loginFailed, setLoginFailed] = useState(false);
-	useEffect(() => {
-		if (loginFailed) {
-			notify();
-			setTimeout(() => {
-				setLoginFailed(false);
-			}, 2000);
-		}
-	}, [loginFailed]);
-	function login(formData) {
-		console.log(formData.get("username"));
-		axios
-			.post(
-				`${baseURL}/login`,
-				{
-					username: formData.get("username"),
-					password: formData.get("password"),
-				},
-				{
-					headers: {
-						"Content-Type": "application/x-www-form-urlencoded",
-					},
-				},
-			)
-			.then((response) => {
-				console.log(response.data);
-				const token = response.data.access_token;
-				localStorage.setItem("token", token);
-				navigate("/");
-				console.log("Logged in successfully");
-			})
-			.catch((error) => {
-				console.log(error);
-				setLoginFailed(true);
-				console.log("Login failed");
-			});
-	}
+	const [, , , , login] = useUser();
 	return (
 		<>
 			<div className="w-fit m-auto text-5xl">Login</div>

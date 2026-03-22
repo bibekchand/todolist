@@ -128,6 +128,7 @@ def on_startup():
 
 @app.post("/addTask", response_model=todolistBase)
 async def add_task(task: todolistBase, token: Annotated[str, Depends(auth)], session: SessionDep):
+    _ = handleAuthorization(token, session)
     db_task = TodolistTable.model_validate(task)
     session.add(db_task)
     session.commit()

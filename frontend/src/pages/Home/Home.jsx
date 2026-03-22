@@ -4,12 +4,15 @@ import { useNavigate } from "react-router";
 import ViewModal from "../../components/Modal/ViewModal.jsx";
 import ProfileCard from "../../components/ProfileCard.jsx";
 import ViewTask from "../../components/ViewTask/ViewTask.jsx";
+import useDialog from "../../hooks/useDialog.jsx";
 import useTasks from "../../hooks/useTasks.jsx";
 import useUser from "../../hooks/useUser.jsx";
+import { Link } from "react-router";
 export default function App() {
 	const navigate = useNavigate();
 	const dialogRef = useRef(null);
-	const [fetchUserInfo, signOut] = useUser();
+	const toggleDialog = useDialog(dialogRef);
+	const [username, userEmail, fetchUserInfo, signOut] = useUser();
 	const [
 		taskList,
 		searchedTaskList,
@@ -17,15 +20,6 @@ export default function App() {
 		searchTasks,
 		fetchUsersAllTaskList,
 	] = useTasks();
-	function toggleDialog() {
-		if (!dialogRef.current) {
-			return;
-		}
-		dialogRef.current.hasAttribute("open")
-			? dialogRef.current.close()
-			: dialogRef.current.showModal();
-	}
-	//Fetch info it can also be done the other way but let's do this to decode from token
 	useEffect(() => {
 		const token = localStorage.getItem("token");
 		if (!token) navigate("/login");
@@ -48,14 +42,12 @@ export default function App() {
 					user: {username}, email: {userEmail}
 				</div>
 				<div>
-					<button
-						type="button"
+					<Link
+						to="/login"
 						className="text-red-500 p-2 cursor-pointer underline"
-						onClick={signOut}
 					>
-						{" "}
-						Sign out
-					</button>
+						Sign Out
+					</Link>
 				</div>
 			</nav>
 			<div>
