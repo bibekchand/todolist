@@ -1,5 +1,5 @@
+import axios from "axios";
 import { baseURL } from "../config.js";
-import axios from "axios"
 
 const getTokenHeader = () => ({
 	Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -40,6 +40,14 @@ export const postLoginInfoToServer = (username, password) => {
 		})
 		.catch((error) => {
 			console.log("Login failed");
-            throw error
+			throw error;
 		});
+};
+export const signUpUser = (formData) => {
+	return axios
+		.post(`${baseURL}/sign_up`, {
+			username: formData.get("username"),
+			password: formData.get("password"),
+			email: formData.get("email") || "NA",
+		})
 };
