@@ -1,24 +1,32 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import {
+	deleteTaskFromServer,
 	getAllTaskListFromServer,
 	getSearchedTaskList,
 	postTaskToServer,
-	deleteTaskFromServer,
 } from "../API/taskHandler.js";
 export default function useTasks() {
 	const [searchedTaskList, setSearchedTaskList] = useState([]);
 	const [taskList, setTaskList] = useState([]);
 	async function searchTasks(formData) {
-		const searchText = formData.get("searchText");
-		const result = await getSearchedTaskList(searchText);
-		console.log(result);
-		setSearchedTaskList(result);
+		try {
+			const searchText = formData.get("searchText");
+			const result = await getSearchedTaskList(searchText);
+			console.log(result);
+			setSearchedTaskList(result);
+		} catch (error) {
+			console.log("Error=>", error);
+		}
 	}
 	async function fetchUsersAllTaskList() {
-		const result = await getAllTaskListFromServer();
-		setTaskList(result);
-		console.log(taskList);
+		try {
+			const result = await getAllTaskListFromServer();
+			setTaskList(result);
+			console.log(taskList);
+		} catch (error) {
+			console.log("Error=>", error);
+		}
 	}
 	async function addTask(formData) {
 		try {
@@ -30,14 +38,15 @@ export default function useTasks() {
 			);
 			toast.success("Task added successfully");
 		} catch (error) {
+			console.log("Error=>", error);
 			toast.error("Some error");
 		}
 	}
 	async function deleteTask(id) {
 		try {
 			await deleteTaskFromServer(id);
-		} catch {
-			console.log("Some problem in deleting");
+		} catch (error) {
+			console.log("Error=>", error);
 		}
 	}
 	return [
@@ -46,6 +55,6 @@ export default function useTasks() {
 		addTask,
 		searchTasks,
 		fetchUsersAllTaskList,
-        deleteTask
+		deleteTask,
 	];
 }

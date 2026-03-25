@@ -11,7 +11,7 @@ export default function App() {
 	const navigate = useNavigate();
 	const dialogRef = useRef(null);
 	const toggleDialog = useDialog(dialogRef);
-	const [username, userEmail, fetchUserInfo, signOut] = useUser();
+	const [username, userEmail, fetchUserInfo] = useUser();
 	const [
 		taskList,
 		searchedTaskList,

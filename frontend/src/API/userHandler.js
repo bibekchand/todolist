@@ -4,7 +4,6 @@ import { baseURL } from "../config.js";
 const getTokenHeader = () => ({
 	Authorization: `Bearer ${localStorage.getItem("token")}`,
 });
-
 export const getUserInfo = () => {
 	return axios
 		.get(`${baseURL}/get_current_user`, {
@@ -17,7 +16,6 @@ export const getUserInfo = () => {
 			throw error;
 		});
 };
-
 export const postLoginInfoToServer = (username, password) => {
 	return axios
 		.post(

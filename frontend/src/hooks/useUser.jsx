@@ -11,9 +11,13 @@ export default function useUser() {
 	const [username, setUsername] = useState("NA");
 	const [userEmail, setUserEmail] = useState("NA");
 	async function fetchUserInfo() {
-		const userInfo = await getUserInfo();
-		setUsername(userInfo.username);
-		setUserEmail(userInfo.email);
+		try {
+			const userInfo = await getUserInfo();
+			setUsername(userInfo.username);
+			setUserEmail(userInfo.email);
+		} catch (error) {
+			toast.error("Some Error=>", error);
+		}
 	}
 	async function signUp(formData) {
 		try {
@@ -41,8 +45,8 @@ export default function useUser() {
 			);
 			toast.success("Logged in successfully");
 			navigate("/");
-		} catch {
-			toast.error("Log in failed");
+		} catch (error) {
+			toast.error("Log in failed=>", error);
 		}
 	}
 	return [username, userEmail, fetchUserInfo, signOut, login, signUp];

@@ -20,39 +20,24 @@ export const getSearchedTaskList = (searchText) => {
 };
 export const getAllTaskListFromServer = () => {
 	console.log("Fetched data from server");
-	return axios
-		.get(`${baseURL}/get_list/`, {
-			headers: getTokenHeader(),
-		})
-		.then((response) => {
-			console.log(response);
-			return response.data;
-		});
+	return axios.get(`${baseURL}/get_list/`, {
+		headers: getTokenHeader(),
+	});
 };
 export const postTaskToServer = (title, description, time, status) => {
-	return axios
-		.post(
-			`${baseURL}/addTask`,
-			{
-				title: title,
-				description: description,
-				time: time,
-				status: status === "on" ? true : false,
-			},
-			{
-				headers: getTokenHeader(),
-			},
-		)
-		.then(() => {
-			console.log("Sent data to server");
-		})
-		.catch((error) => {
-			throw new Error("Something went wrong with server");
-		});
+	return axios.post(
+		`${baseURL}/addTask`,
+		{
+			title: title,
+			description: description,
+			time: time,
+			status: status === "on" ? true : false,
+		},
+		{
+			headers: getTokenHeader(),
+		},
+	);
 };
-
 export const deleteTaskFromServer = (id) => {
-	axios.delete(`http://localhost:8000/delete_list/${id}`).then((response) => {
-		console.log(response);
-	});
+	return axios.delete(`${baseURL}/${id}`);
 };
