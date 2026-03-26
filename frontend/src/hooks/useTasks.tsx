@@ -9,7 +9,7 @@ import {
 export default function useTasks() {
 	const [searchedTaskList, setSearchedTaskList] = useState([]);
 	const [taskList, setTaskList] = useState([]);
-	async function searchTasks(formData) {
+	async function searchTasks(formData: FormData) {
 		try {
 			const searchText = formData.get("searchText");
 			const result = await getSearchedTaskList(searchText);
@@ -28,7 +28,7 @@ export default function useTasks() {
 			console.log("Error=>", error);
 		}
 	}
-	async function addTask(formData) {
+	async function addTask(formData: FormData) {
 		try {
 			await postTaskToServer(
 				formData.get("title"),
@@ -42,7 +42,7 @@ export default function useTasks() {
 			toast.error("Some error");
 		}
 	}
-	async function deleteTask(id) {
+	async function deleteTask(id: number) {
 		try {
 			await deleteTaskFromServer(id);
 		} catch (error) {

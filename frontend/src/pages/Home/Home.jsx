@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { Toaster } from "react-hot-toast";
-import { Link, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import ViewModal from "../../components/Modal/ViewModal.jsx";
 import ProfileCard from "../../components/ProfileCard.jsx";
 import ViewTask from "../../components/ViewTask/ViewTask.jsx";
@@ -11,7 +11,7 @@ export default function App() {
 	const navigate = useNavigate();
 	const dialogRef = useRef(null);
 	const toggleDialog = useDialog(dialogRef);
-	const [username, userEmail, fetchUserInfo] = useUser();
+	const [username, userEmail, fetchUserInfo, signOut] = useUser();
 	const [
 		taskList,
 		searchedTaskList,
@@ -41,12 +41,12 @@ export default function App() {
 					user: {username}, email: {userEmail}
 				</div>
 				<div>
-					<Link
-						to="/login"
+					<div
+						onClick={signOut}
 						className="text-red-500 p-2 cursor-pointer underline"
 					>
 						Sign Out
-					</Link>
+					</div>
 				</div>
 			</nav>
 			<div>
