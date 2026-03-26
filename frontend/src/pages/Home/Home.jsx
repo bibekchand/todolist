@@ -7,6 +7,7 @@ import ViewTask from "../../components/ViewTask/ViewTask.jsx";
 import useDialog from "../../hooks/useDialog.jsx";
 import useTasks from "../../hooks/useTasks.jsx";
 import useUser from "../../hooks/useUser.jsx";
+import NavBar from "../../components/NavBar/NavBar.tsx"
 export default function App() {
 	const navigate = useNavigate();
 	const dialogRef = useRef(null);
@@ -29,6 +30,7 @@ export default function App() {
 	}, []);
 	return (
 		<>
+        <NavBar/>
 			<ProfileCard />
 			<div
 				className="text-4xl fixed bottom-0 right-0 h-fit w-fit bg-gray-600 p-2 m-2 rounded-full hover:after:content-['AddTask'] transition-all duration-100 ease-in-out cursor-pointer"
