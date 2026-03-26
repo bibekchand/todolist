@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import { Link } from "react-router";
 import useUser from "../../hooks/useUser.jsx";
 export default function Login() {
