@@ -10,13 +10,6 @@ export const getSearchedTaskList = (searchText) => {
 		.get(`${baseURL}/searchTasks?searchText=${searchText}`, {
 			headers: getTokenHeader(),
 		})
-		.then((response) => {
-			console.log(response);
-			return response.data;
-		})
-		.catch(() => {
-			console.log("Error");
-		});
 };
 export const getAllTaskListFromServer = () => {
 	console.log("Fetched data from server");
@@ -39,5 +32,5 @@ export const postTaskToServer = (title, description, time, status) => {
 	);
 };
 export const deleteTaskFromServer = (id) => {
-	return axios.delete(`${baseURL}/${id}`);
+	return axios.delete(`${baseURL}/delete_list/${id}`);
 };

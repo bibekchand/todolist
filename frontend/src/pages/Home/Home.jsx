@@ -139,7 +139,6 @@ export default function App() {
 					fetchTaskList={fetchUsersAllTaskList}
 				/>
 			))}
-
 			<Toaster position="bottom-center" />
 		</>
 	);

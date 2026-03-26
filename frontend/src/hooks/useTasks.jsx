@@ -14,7 +14,7 @@ export default function useTasks() {
 			const searchText = formData.get("searchText");
 			const result = await getSearchedTaskList(searchText);
 			console.log(result);
-			setSearchedTaskList(result);
+			setSearchedTaskList(result.data);
 		} catch (error) {
 			console.log("Error=>", error);
 		}
@@ -22,8 +22,8 @@ export default function useTasks() {
 	async function fetchUsersAllTaskList() {
 		try {
 			const result = await getAllTaskListFromServer();
-			setTaskList(result);
-			console.log(taskList);
+			setTaskList(result.data);
+			console.log("Task List fetched=>", result.data);
 		} catch (error) {
 			console.log("Error=>", error);
 		}
