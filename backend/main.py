@@ -3,8 +3,6 @@ from datetime import datetime, timedelta, timezone
 from typing import Annotated
 from sqlmodel import Field, SQLModel, create_engine, Session, select, or_
 from fastapi.middleware.cors import CORSMiddleware
-
-
 from pydantic import BaseModel
 import jwt
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -126,7 +124,7 @@ def on_startup():
     create_db_and_tables()
 
 
-@app.post("/addTask", response_model=todolistBase)
+@app.post("/task/add", response_model=todolistBase)
 async def add_task(task: todolistBase, token: Annotated[str, Depends(auth)], session: SessionDep):
     _ = handleAuthorization(token, session)
     db_task = TodolistTable.model_validate(task)
