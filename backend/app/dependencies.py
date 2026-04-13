@@ -1,11 +1,11 @@
 from fastapi import HTTPException, status, Header
 from jwt.exceptions import InvalidTokenError, ExpiredSignatureError
-from pyjwt import jwt
+import jwt
 from .tables.UserTable import UserTable
 from .config import get_settings
 from pwdlib import PasswordHash
 from datetime import datetime, timedelta, timezone
-from .db import get_session
+from .db import get_session, SessionDep
 from typing import Annotated
 
 password_hash = PasswordHash.recommended()
@@ -38,9 +38,8 @@ def verify_token(token: Annotated[str, Header()]):
         raise credentials_exception
 
 
-def verify_user_credentials(username: str, password: str):
+def verify_user_credentials(username: str, password: str, session: SessionDep):
     print("Authenticating User")
-    session = get_session()
     user = session.get(UserTable, username)
     credentials_error = HTTPException(
         status_code=401,

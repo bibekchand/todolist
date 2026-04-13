@@ -1,12 +1,14 @@
 from fastapi.security import OAuth2PasswordRequestForm
 from typing import Annotated
 from fastapi import APIRouter, Depends
-from ..model import Token
+from ..model.Token import Token
 from ..dependencies import verify_user_credentials, create_access_token
 from ..config import get_settings
+from datetime import timedelta
+from ..db import SessionDep
 settings = get_settings()
 
-router = APIRouter(Depends(verify_user_credentials))
+router = APIRouter(dependencies=[Depends(verify_user_credentials)])
 
 
 @router.post("/login")
