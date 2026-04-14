@@ -208,4 +208,4 @@ def get_current_user(token: Annotated[str, Depends(auth)], session: SessionDep):
         userDetail = handleAuthorization(token, session)
         return userDetail
     except:
-        print("Token expired")
+       print("Token expired")

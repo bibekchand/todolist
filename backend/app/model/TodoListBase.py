@@ -1,7 +1,7 @@
-from pydantic import SQLModel, Field
+from sqlmodel import SQLModel, Field
 
 
-class ToDolistBase(SQLModel):
+class TodoListBase(SQLModel):
     title:  str | None = Field(default=None, index=True)
     description: str | None = Field(default=None, index=True)
     time: str | None = Field(default=None, index=True)

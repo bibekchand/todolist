@@ -1,7 +1,8 @@
-from fastapi import Depends, APIRouter
+from fastapi import Depends, APIRouter, Query, HTTPException
+from typing import Annotated
 from ..dependencies import verify_token
-from ..tables import TodoListTable
-from ..models import TodoListBase
+from ..tables.TodoListTable import TodoListTable
+from ..model.TodoListBase import TodoListBase
 from fastapi.security import OAuth2PasswordBearer
 from ..db import SessionDep
 from sqlmodel import select, or_
@@ -25,7 +26,7 @@ async def add_task(task: TodoListBase, session: SessionDep):
 
 
 @router.get("/search", response_model=list[TodoListTable])
-async def searchTasks(searchText: str, session: SessionDep):
+async def search_tasks(searchText: str, session: SessionDep):
     if not searchText:
         return []
     statement = select(TodoListTable).where(
@@ -35,3 +36,25 @@ async def searchTasks(searchText: str, session: SessionDep):
     searchedTasks = results.all()
     print("Searched Tasks=>", searchedTasks)
     return searchedTasks
+
+
+@router.get("/get_user_task")
+def get_user_task(token:  Annotated[str, Depends(auth)],
+                  session: SessionDep,
+                  offset: int = 0,
+                  limit: Annotated[int, Query(le=100)] = 100,
+                  ) -> list[TodoListTable]:
+    lists = session.exec(
+        select(TodoListTable).offset(offset).limit(limit)).all()
+    return lists
+
+
+@router.delete("/delete_task/{id}")
+def delete_task(id: int, session: SessionDep):
+    list = session.get(TodoListTable, id)
+    if not list:
+        raise HTTPException(status_code=404, detail="item not found")
+    else:
+        session.delete(list)
+        session.commit()
+        return {"message": "Deleted"}

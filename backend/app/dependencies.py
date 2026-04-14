@@ -1,4 +1,4 @@
-from fastapi import HTTPException, status, Header
+from fastapi import HTTPException, status, Depends
 from jwt.exceptions import InvalidTokenError, ExpiredSignatureError
 import jwt
 from .tables.UserTable import UserTable
@@ -7,13 +7,14 @@ from pwdlib import PasswordHash
 from datetime import datetime, timedelta, timezone
 from .db import get_session, SessionDep
 from typing import Annotated
+from fastapi.security import OAuth2PasswordBearer
 
 password_hash = PasswordHash.recommended()
-
+auth = OAuth2PasswordBearer(tokenUrl="login")
 settings = get_settings()
 
 
-def verify_token(token: Annotated[str, Header()]):
+def verify_token(token: Annotated[str, Depends(auth)], session: SessionDep):
     print("Token=>", token)
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -21,9 +22,9 @@ def verify_token(token: Annotated[str, Header()]):
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
-        payload = jwt.decode(settings.token,
+        payload = jwt.decode(token,
                              settings.secret_key, algorithms=[
-                                 settings.algorihtm])
+                                 settings.algorithm])
         print("This is the payload", payload)
         username = payload.get("sub")
         if not username:
@@ -32,14 +33,15 @@ def verify_token(token: Annotated[str, Header()]):
         raise credentials_exception
     except ExpiredSignatureError:
         raise HTTPException(status_code=401, detail="token expired")
-    session = get_session()
     user = session.get(UserTable, username)
     if not user:
         raise credentials_exception
+    return user
 
 
-def verify_user_credentials(username: str, password: str, session: SessionDep):
-    print("Authenticating User")
+def verify_user_credentials(username: str, password: str):
+    session = get_session()
+    session = next(session)
     user = session.get(UserTable, username)
     credentials_error = HTTPException(
         status_code=401,
