@@ -1,5 +1,5 @@
 import { Toaster } from "react-hot-toast";
-import useUser from "../../hooks/useUser.jsx";
+import useUser from "../hooks/useUser.jsx";
 export default function Register() {
 	const [, , , , , signUp] = useUser();
 	return (

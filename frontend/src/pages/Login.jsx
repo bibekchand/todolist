@@ -1,6 +1,6 @@
 import { Toaster } from "react-hot-toast";
 import { Link } from "react-router";
-import useUser from "../../hooks/useUser.jsx";
+import useUser from "../hooks/useUser.jsx";
 export default function Login() {
 	const [, , , , login] = useUser();
 	return (
