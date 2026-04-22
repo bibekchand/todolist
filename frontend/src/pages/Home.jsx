@@ -1,9 +1,9 @@
-import Sidebar from "../assests/sidebar.svg?react";
-import SearchIcon from "../assests/SearchIcon.svg?react";
-import AddIcon from "../assests/add.svg?react";
-import NotificationIcon from "../assests/notification.svg?react";
-import catImage from "../assests/cato.avif";
 import { useState } from "react";
+import AddIcon from "../assests/add.svg?react";
+import catImage from "../assests/cato.avif";
+import NotificationIcon from "../assests/notification.svg?react";
+import SearchIcon from "../assests/SearchIcon.svg?react";
+import Sidebar from "../assests/sidebar.svg?react";
 export default function Home() {
     const [username, setUsername] = useState("Ram Shah");
     const [toggleSidebar, setToggleSidebar] = useState(true);
