@@ -21,9 +21,16 @@ export default function Home() {
                     </button>
                 )}
             </div>
-            <div className="grid grid-cols-[auto_1fr] ">
+
+            {toggleSidebar && (
                 <div
-                    className={`flex ${toggleSidebar ? "p-2" : "p-0"} flex-col gap-5 overflow-clip transition-all bg-gray-100`}
+                    className="fixed z-90 md:hidden bg-gray-500 opacity-20 h-screen w-screen ease-in-out transition-all"
+                    onClick={() => setToggleSidebar(false)}
+                ></div>
+            )}
+            <div className="grid md:grid-cols-[auto_1fr] grid-cols-1 items-start">
+                <div
+                    className={`flex ${toggleSidebar ? "p-2" : "p-0"} fixed flex-col top-0 gap-5 overflow-clip transition-all duration-500 ease-in-out bg-gray-100 md:sticky z-100 opacity-90 grow-0`}
                     style={{
                         maxWidth: toggleSidebar ? "500px" : "0px",
                     }}
@@ -56,7 +63,7 @@ export default function Home() {
                         </ul>
                     </div>
                 </div>
-                <div className=" flex justify-center">Hello</div>
+                <div className="m-10 max-w-[65ch]">Hello</div>
             </div>
         </>
     );
