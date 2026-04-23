@@ -27,7 +27,7 @@ export default function Sidebar({ toggleSidebar, setToggleSidebar }) {
                 ></div>
             )}
             <div
-                className={`flex p-2 fixed flex-col top-0 gap-5 overflow-clip transition-transform duration-500 ease-in-out bg-gray-100 md:static z-100 opacity-90 grow-0 ${toggleSidebar ? "translate-x-0" : " -translate-x-full"}`}
+                className={`flex p-2 h-screen fixed flex-col top-0 gap-5 overflow-clip transition-transform duration-500 ease-in-out bg-gray-100 md:sticky z-100 opacity-90 grow-0 ${toggleSidebar ? "translate-x-0" : " -translate-x-full"}`}
             >
                 <div className="flex items-center gap-5">
                     <div className="flex rounded-2xl items-center gap-2 p-2 hover:bg-gray-500 duration-200 ease-in-out cursor-pointer">
