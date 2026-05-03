@@ -10,8 +10,7 @@ export default function Home() {
                 toggleSidebar={toggleSidebar}
                 setToggleSidebar={setToggleSidebar}
             />
-            <div className="m-10 max-w-[65ch]">
-            </div>
+            <div className="m-10 max-w-[65ch]">Hello</div>
         </div>
     );
 }

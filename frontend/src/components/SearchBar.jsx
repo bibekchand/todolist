@@ -14,7 +14,7 @@ export default function SearchBar({ toggleSearchBar = false }) {
     );
     return (
         <div
-            className={`fixed top-[30%]  ${toggleSearchBar ? "" : "hidden"} rounded-[10px] left-[30%] w-[30vw] shadow-gray-700 shadow-lg/80`}
+            className={`fixed top-[30%] bg-white ${toggleSearchBar ? "opacity-100" : "opacity-0 pointer-events-none"} transition-all duration-200 ease-in-out rounded-[10px] left-[30%] w-[30vw] shadow-gray-700 shadow-lg/80 pb-1`}
         >
             <div className="flex gap-1 border-b border-gray-300 p-2">
                 <MagnifyingGlassIcon />
