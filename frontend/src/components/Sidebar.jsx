@@ -4,8 +4,10 @@ import catImage from "../assests/cato.avif";
 import NotificationIcon from "../assests/notification.svg?react";
 import SearchIcon from "../assests/SearchIcon.svg?react";
 import SideBarIcon from "../assests/sidebar.svg?react";
+import SearchBar from "./SearchBar.jsx";
 export default function Sidebar({ toggleSidebar, setToggleSidebar }) {
     const [username, setUsername] = useState("Ram Shah");
+    const [toggleSearchBar, setToggleSearchBar] = useState(false);
     return (
         <>
             <div className="fixed top-5 pl-5 ">
@@ -37,7 +39,7 @@ export default function Sidebar({ toggleSidebar, setToggleSidebar }) {
                         <span>{username}</span>
                         <span className="rotate-90"> &gt;</span>
                     </div>
-                    <NotificationIcon className="fill-black  hover:fill-gray-300 duration-100 ease-in-out cursor-pointer" />
+                    <NotificationIcon className="fill-black hover:fill-gray-300 duration-100 ease-in-out cursor-pointer" />
                     <SideBarIcon
                         onClick={() => setToggleSidebar(!toggleSidebar)}
                         className="fill-black hover:fill-gray-300  duration-100 ease-in-out cursor-pointer"
@@ -45,18 +47,18 @@ export default function Sidebar({ toggleSidebar, setToggleSidebar }) {
                 </div>
                 <div>
                     <ul>
-                        <li className="rounded-2xl flex gap-2 justify-start cursor-pointer hover:bg-gray-200 duration-200 ease-in-out p-2">
+                        <li className="active:bg-amber-300 rounded-2xl flex gap-2 justify-start cursor-pointer hover:bg-gray-200 duration-200 ease-in-out p-2">
                             <AddIcon className="fill-blue-500" />
                             Add Task
                         </li>
-
-                        <li className="rounded-2xl flex gap-2 justify-start cursor-pointer hover:bg-gray-200 duration-200 ease-in-out p-2">
+                        <li className="active:bg-amber-300  rounded-2xl flex gap-2 justify-start cursor-pointer hover:bg-gray-200 duration-200 ease-in-out p-2">
                             <SearchIcon className="fill-blue-500" />
                             Search
                         </li>
                     </ul>
                 </div>
             </div>
+            <SearchBar toggleSearchBar={true}/>
         </>
     );
 }
