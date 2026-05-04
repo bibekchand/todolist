@@ -16,6 +16,7 @@
     "package.json": "^0.0.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-flatpickr": "^4.0.11",
     "react-hot-toast": "^2.6.0",
     "react-router": "^7.13.1",
     "tailwindcss": "^4.2.1"

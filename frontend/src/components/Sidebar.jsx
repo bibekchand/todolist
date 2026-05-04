@@ -4,7 +4,9 @@ import catImage from "../assests/cato.avif";
 import NotificationIcon from "../assests/notification.svg?react";
 import SearchIcon from "../assests/SearchIcon.svg?react";
 import SideBarIcon from "../assests/sidebar.svg?react";
+import InboxIcon from "../assests/inbox.svg?react";
 import SearchBar from "./SearchBar.jsx";
+import TaskBar from "./TaskBar.jsx";
 export default function Sidebar({ toggleSidebar, setToggleSidebar }) {
     const [username, setUsername] = useState("Ram Shah");
     const [toggleSearchBar, setToggleSearchBar] = useState(false);
@@ -60,13 +62,14 @@ export default function Sidebar({ toggleSidebar, setToggleSidebar }) {
                         </li>
 
                         <li className="active:bg-amber-300 rounded-2xl flex gap-2 justify-start cursor-pointer hover:bg-gray-200 duration-200 ease-in-out p-2">
-                            <AddIcon className="fill-blue-500" />
+                            <InboxIcon className="fill-blue-500" />
                             Inbox
                         </li>
                     </ul>
                 </div>
             </div>
             <SearchBar toggleSearchBar={toggleSearchBar} />
+            <TaskBar />
         </>
     );
 }
