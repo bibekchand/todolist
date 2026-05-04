@@ -1,5 +1,7 @@
-import Flatpickr from "react-flatpickr";
+import InboxIcon from "../assests/inbox.svg?react";
+import { useState } from "react";
 export default function TaskBar() {
+    const [toggleList, setToggleList] = useState(false);
     return (
         <div className="fixed border z-1 bg-white border-gray-300 p-2 w-[60vw] h-[20vh] top-[20%] left-[20%]  shadow-lg/50 rounded-2xl">
             <form action="" className="flex flex-col">
@@ -29,8 +31,19 @@ export default function TaskBar() {
                         placeholder="date"
                     />
                 </div>
-                <Flatpickr />
             </form>
+            <button type="button" className="border p-2 relative">
+                <span onClick={() => setToggleList(!toggleList)}>The Button</span>
+                {toggleList && (
+                    <div className="border-2 absolute top-full left-[20%] bg-white">
+                        <ul>
+                            <li>First</li>
+                            <li>Second</li>
+                            <li>Third</li>
+                        </ul>
+                    </div>
+                )}
+            </button>
         </div>
     );
 }
