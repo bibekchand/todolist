@@ -1,5 +1,4 @@
 import { useState } from "react";
-import XMarkIcon from "../assests/xmark.svg?react";
 import MagnifyingGlassIcon from "../assests/magnifying-glass.svg?react";
 export default function SearchBar({ toggleSearchBar = false }) {
     const [items, setItems] = useState(["First", "Second", "Third"]);

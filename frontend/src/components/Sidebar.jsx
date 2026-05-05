@@ -10,6 +10,7 @@ import TaskBar from "./TaskBar.jsx";
 export default function Sidebar({ toggleSidebar, setToggleSidebar }) {
     const [username, setUsername] = useState("Ram Shah");
     const [toggleSearchBar, setToggleSearchBar] = useState(false);
+    const [openTaskBar, setToggleTaskBar] = useState(false);
     return (
         <>
             <div className="fixed top-5 pl-5 ">
@@ -49,7 +50,10 @@ export default function Sidebar({ toggleSidebar, setToggleSidebar }) {
                 </div>
                 <div>
                     <ul>
-                        <li className="active:bg-amber-300 rounded-2xl flex gap-2 justify-start cursor-pointer hover:bg-gray-200 duration-200 ease-in-out p-2">
+                        <li
+                            onClick={() => setToggleTaskBar(!openTaskBar)}
+                            className="active:bg-amber-300 rounded-2xl flex gap-2 justify-start cursor-pointer hover:bg-gray-200 duration-200 ease-in-out p-2"
+                        >
                             <AddIcon className="fill-blue-500" />
                             Add Task
                         </li>
@@ -69,7 +73,7 @@ export default function Sidebar({ toggleSidebar, setToggleSidebar }) {
                 </div>
             </div>
             <SearchBar toggleSearchBar={toggleSearchBar} />
-            <TaskBar />
+            {openTaskBar && <TaskBar />}
         </>
     );
 }
