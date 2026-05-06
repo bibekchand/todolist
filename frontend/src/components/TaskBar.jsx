@@ -1,26 +1,67 @@
 import InboxIcon from "../assests/inbox.svg?react";
 import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
-import { useState, useRef } from "react";
-export default function TaskBar() {
+import { useState, useRef, useEffect } from "react";
+export default function TaskBar({ openTaskBar, setToggleTaskBar }) {
     const [toggleList, setToggleList] = useState(false);
     const [date, setDate] = useState(new Date());
     const [time, setTime] = useState(new Date());
     const flatPickerTimeRef = useRef(null);
     const flatPickerRef = useRef(null);
+    const taskBarRef = useRef(null);
     const toggleFlatpickr = () => {
         if (flatPickerRef.current?.flatpickr?.isOpen) {
             flatPickerRef.current?.flatpickr.close();
         } else flatPickerRef.current?.flatpickr.open();
     };
+    useEffect(() => {
+        const handler = (event) => {
+            console.log(event.target.classList);
+            if (!taskBarRef?.current?.contains(event.target)) {
+                console.log(event.target.classList);
+                const checkList = [
+                    "flatpickr-calendar",
+                    "flatpickr-next-month",
+                    "flatpickr-weekdays",
+                    "flatpickr-weekday",
+                    "flatpickr-month",
+                    "flatpickr-current-month",
+                    "flatpickr-monthDropdown-month",
+                    "flatpickr-prev-month",
+                    "numInput",
+                    "flatpickr-am-pm",
+                    "arrowUp",
+                    "arrowDown",
+                ];
+                const classList = event.target.classList;
+                //check and stop propagation
+                const isFlatpickr = checkList.some((item) => classList.contains(item));
+                if (isFlatpickr) {
+                    event.stopPropagation();
+                    console.log("Is Flat");
+                    return;
+                }
+                console.log(event);
+                setToggleTaskBar(false);
+            }
+        };
+        if (openTaskBar) document.addEventListener("click", handler);
+        return () => {
+            document.removeEventListener("click", handler);
+            console.log("Removing event listener");
+        };
+    }, [openTaskBar]);
 
     const toggleFlatpickrTime = () => {
-        if (flatPickerTimeRef.current?.flatpickr?.isOpen) {
+        if (flatPickerTimeRef.current?.flatpickr?.isOpsen) {
             flatPickerTimeRef.current?.flatpickr.close();
         } else flatPickerTimeRef.current?.flatpickr.open();
     };
     return (
-        <div className="fixed border z-1 bg-white border-gray-300 p-2 w-[60vw] h-fit top-[20%] left-[20%]  shadow-lg/50 rounded-2xl">
+        <div
+            ref={taskBarRef}
+            className="fixed border z-1 bg-white border-gray-300 p-2 w-[60vw] h-fit top-[20%] left-[20%]  shadow-lg/50 rounded-2xl"
+        >
             <form action="" className="flex flex-col">
                 <input
                     name="taskTitle"

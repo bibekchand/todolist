@@ -51,7 +51,10 @@ export default function Sidebar({ toggleSidebar, setToggleSidebar }) {
                 <div>
                     <ul>
                         <li
-                            onClick={() => setToggleTaskBar(!openTaskBar)}
+                            onClick={(e) => {
+                                setToggleTaskBar(!openTaskBar);
+                                e.stopPropagation();
+                            }}
                             className="active:bg-amber-300 rounded-2xl flex gap-2 justify-start cursor-pointer hover:bg-gray-200 duration-200 ease-in-out p-2"
                         >
                             <AddIcon className="fill-blue-500" />
@@ -73,7 +76,12 @@ export default function Sidebar({ toggleSidebar, setToggleSidebar }) {
                 </div>
             </div>
             <SearchBar toggleSearchBar={toggleSearchBar} />
-            {openTaskBar && <TaskBar />}
+            {openTaskBar && (
+                <TaskBar
+                    openTaskBar={openTaskBar}
+                    setToggleTaskBar={setToggleTaskBar}
+                />
+            )}
         </>
     );
 }
