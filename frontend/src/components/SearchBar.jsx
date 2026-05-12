@@ -1,18 +1,33 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import MagnifyingGlassIcon from "../assests/magnifying-glass.svg?react";
-export default function SearchBar({ toggleSearchBar = false }) {
+export default function SearchBar({
+    toggleSearchBar = false,
+    setToggleSearchBar,
+}) {
     const [items, setItems] = useState(["First", "Second", "Third"]);
     const [query, setQuery] = useState("");
     const handleChange = (event) => {
         const query = event.target.value;
         setQuery(query);
     };
-
+    const searchBarRef = useRef(null);
+    useEffect(() => {
+        const handler = (event) => {
+            if (!searchBarRef.current?.contains(event.target)) {
+                setToggleSearchBar(false);
+            }
+        };
+        if (toggleSearchBar) document.addEventListener("mousedown", handler);
+        return () => {
+            document.removeEventListener("mousedown", handler);
+        };
+    }, [toggleSearchBar]);
     const filteredItems = items.filter((item) =>
         item.toLowerCase().includes(query.toLowerCase()),
     );
     return (
         <div
+            ref={searchBarRef}
             className={`fixed top-[30%] bg-white ${toggleSearchBar ? "opacity-100" : "opacity-0 pointer-events-none"} transition-all duration-200 ease-in-out rounded-[10px] left-[30%] w-[30vw] shadow-gray-700 shadow-lg/80 pb-1 z-10`}
         >
             <div className="flex gap-1 border-b border-gray-300 p-2">
