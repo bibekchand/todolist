@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState} from "react";
 import AddIcon from "../assests/add.svg?react";
 import catImage from "../assests/cato.avif";
 import NotificationIcon from "../assests/notification.svg?react";
@@ -7,6 +7,7 @@ import SideBarIcon from "../assests/sidebar.svg?react";
 import InboxIcon from "../assests/inbox.svg?react";
 import SearchBar from "./SearchBar.jsx";
 import TaskBar from "./TaskBar.jsx";
+import AddProjects from "./AddProjects.jsx";
 const projectsList = [
     "First",
     "Second",
@@ -22,6 +23,7 @@ export default function Sidebar({ toggleSidebar, setToggleSidebar }) {
     const [toggleSearchBar, setToggleSearchBar] = useState(false);
     const [openTaskBar, setToggleTaskBar] = useState(false);
     const [toggleProjectsList, setToggleProjectsList] = useState(false);
+    const [openAddProject, setOpenAddProject] = useState(false);
     return (
         <>
             <div className="fixed top-5 pl-5 ">
@@ -86,9 +88,12 @@ export default function Sidebar({ toggleSidebar, setToggleSidebar }) {
 
                         <li className=" mt-3 active:bg-amber-300 rounded-[5px] flex gap-2 justify-start cursor-pointer hover:bg-gray-200 duration-200 ease-in-out p-2">
                             My Projects
-                            <span className="ml-auto rounded-[5px] mr-2 text-2xl hover:bg-gray-500 pl-2 pr-2">
+                            <div
+                                className="ml-auto rounded-[5px] mr-2 text-2xl hover:bg-gray-500 pl-2 pr-2"
+                                onClick={() => setOpenAddProject(!openAddProject)}
+                            >
                                 +
-                            </span>
+                            </div>
                             <button
                                 type="button"
                                 onClick={() => setToggleProjectsList(!toggleProjectsList)}
@@ -126,6 +131,7 @@ export default function Sidebar({ toggleSidebar, setToggleSidebar }) {
                     setToggleTaskBar={setToggleTaskBar}
                 />
             )}
+            {openAddProject && <AddProjects setOpenAddProjects={setOpenAddProject} />}
         </>
     );
 }
