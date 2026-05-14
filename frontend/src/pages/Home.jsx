@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Outlet } from "react-router";
 import Sidebar from "../components/Sidebar.jsx";
 export default function Home() {
     const [toggleSidebar, setToggleSidebar] = useState(true);
@@ -10,7 +11,9 @@ export default function Home() {
                 toggleSidebar={toggleSidebar}
                 setToggleSidebar={setToggleSidebar}
             />
-            <div className="m-10">Something in the way</div>
+            <div className="m-10">
+                <Outlet />
+             </div>
         </div>
     );
 }

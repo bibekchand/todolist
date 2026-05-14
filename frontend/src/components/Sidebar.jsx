@@ -1,4 +1,5 @@
-import { useState} from "react";
+import { useState } from "react";
+import { Link } from "react-router";
 import AddIcon from "../assests/add.svg?react";
 import catImage from "../assests/cato.avif";
 import NotificationIcon from "../assests/notification.svg?react";
@@ -81,10 +82,13 @@ export default function Sidebar({ toggleSidebar, setToggleSidebar }) {
                             Search
                         </li>
 
-                        <li className="active:bg-amber-300 rounded-[5px] flex gap-2 justify-start cursor-pointer hover:bg-gray-200 duration-200 ease-in-out p-2">
-                            <InboxIcon className="fill-blue-500" />
-                            Inbox
-                        </li>
+                        <Link to="/inbox">
+                            {" "}
+                            <li className="active:bg-amber-300 rounded-[5px] flex gap-2 justify-start cursor-pointer hover:bg-gray-200 duration-200 ease-in-out p-2">
+                                <InboxIcon className="fill-blue-500" />
+                                Inbox
+                            </li>
+                        </Link>
 
                         <li className=" mt-3 active:bg-amber-300 rounded-[5px] flex gap-2 justify-start cursor-pointer hover:bg-gray-200 duration-200 ease-in-out p-2">
                             My Projects
