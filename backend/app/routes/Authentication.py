@@ -1,43 +1,39 @@
-from fastapi.security import OAuth2PasswordRequestForm
-from fastapi import HTTPException, status
-from typing import Annotated
 from fastapi import APIRouter, Depends
-from ..model.Token import Token
-from ..model.UserCreate import UserCreate
-from ..tables.UserTable import UserTable
-from ..dependencies import create_access_token, verify_user_credentials
-from ..config import get_settings
+from fastapi import HTTPException
+from typing import Annotated
+from fastapi.security import OAuth2PasswordRequestForm
 from datetime import timedelta
-from ..db import SessionDep
+from ..dependencies import verify_user
+from ..db_config import SessionDep
+from ..dependencies import create_access_token
+from ..tables.UserTable import UserTable
+from ..settings import get_settings
+from ..model.Token import Token
 from pwdlib import PasswordHash
+router = APIRouter(tags=["Authentication"])
 
 password_hash = PasswordHash.recommended()
 settings = get_settings()
 
-router = APIRouter(tags=["Authentication"])
-
 
 @router.post("/login")
-def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], session: SessionDep) -> Token:
-    verify_user_credentials(username=form_data.username,
-                            password=form_data.password)
-    access_token_expires = timedelta(minutes=settings.access_token_expire)
+def login(login_data: Annotated[OAuth2PasswordRequestForm, Depends()], session: SessionDep):
+    verify_user(username=login_data.username, password=login_data.password)
+    expiry_time = timedelta(minutes=settings.access_token_expire)
     access_token = create_access_token(
-        data={"sub": form_data.username},
-        expires_delta=access_token_expires)
-    return Token(access_token=access_token, token_type="bearer")
+        data={'sub': login_data.username}, expires_delta=expiry_time)
+    # return Token(access_token=access_token, token_type="bearer", expiration_time=)
 
 
 @router.post("/sign_up")
-def add_new_user(user: UserCreate, session: SessionDep):
-    db_user = UserTable(**user.model_dump())
-    exists = session.get(UserTable, db_user.username)
+def add_new_user(user: UserTable, session: SessionDep):
+    exists = session.get(UserTable, user.username)
     if not exists:
-        db_user.password = password_hash.hash(db_user.password)
-        session.add(db_user)
+        user.password = password_hash.hash(user.password)
+        session.add(user)
         session.commit()
-        session.refresh(db_user)
+        session.refresh(user)
     else:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT,
+        raise HTTPException(status_code=409,
                             detail="Username already taken")
     return {"message": "Created"}

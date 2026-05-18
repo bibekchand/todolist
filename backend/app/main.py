@@ -1,12 +1,9 @@
 from fastapi import FastAPI
-from .routes import Authentication, User, Task
+from .routes import Authentication
 from fastapi.middleware.cors import CORSMiddleware
-from .db import create_db_and_tables
+from .db_config import create_db_and_tables
 app = FastAPI()
 app.include_router(Authentication.router)
-
-app.include_router(User.router)
-app.include_router(Task.router)
 
 app.add_middleware(
     CORSMiddleware,
