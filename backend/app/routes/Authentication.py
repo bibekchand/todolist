@@ -17,12 +17,16 @@ settings = get_settings()
 
 
 @router.post("/login")
-def login(login_data: Annotated[OAuth2PasswordRequestForm, Depends()], session: SessionDep):
+def login(login_data: Annotated[OAuth2PasswordRequestForm,
+                                Depends()],
+          session: SessionDep):
     verify_user(username=login_data.username, password=login_data.password)
     expiry_time = timedelta(minutes=settings.access_token_expire)
     access_token = create_access_token(
         data={'sub': login_data.username}, expires_delta=expiry_time)
-    # return Token(access_token=access_token, token_type="bearer", expiration_time=)
+    print(expiry_time)
+    return Token(access_token=access_token, token_type="bearer",
+                 expiration_time=expiry_time)
 
 
 @router.post("/sign_up")
