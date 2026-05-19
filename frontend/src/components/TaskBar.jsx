@@ -1,47 +1,16 @@
+import { DatePicker, DateField, Calendar } from "@heroui/react";
+import { Label, TimeField } from "@heroui/react";
 import InboxIcon from "../assests/inbox.svg?react";
 import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 import { useState, useRef, useEffect } from "react";
 export default function TaskBar({ openTaskBar, setToggleTaskBar }) {
     const [toggleList, setToggleList] = useState(false);
-    const [date, setDate] = useState(new Date());
-    const [time, setTime] = useState(new Date());
-    const flatPickerTimeRef = useRef(null);
-    const flatPickerRef = useRef(null);
     const taskBarRef = useRef(null);
-    const toggleFlatpickr = () => {
-        if (flatPickerRef.current?.flatpickr?.isOpen) {
-            flatPickerRef.current?.flatpickr.close();
-        } else flatPickerRef.current?.flatpickr.open();
-    };
     useEffect(() => {
         const handler = (event) => {
             console.log(event.target.classList);
             if (!taskBarRef?.current?.contains(event.target)) {
-                console.log(event.target.classList);
-                const checkList = [
-                    "flatpickr-calendar",
-                    "flatpickr-next-month",
-                    "flatpickr-weekdays",
-                    "flatpickr-weekday",
-                    "flatpickr-month",
-                    "flatpickr-current-month",
-                    "flatpickr-monthDropdown-month",
-                    "flatpickr-prev-month",
-                    "numInput",
-                    "flatpickr-am-pm",
-                    "arrowUp",
-                    "arrowDown",
-                ];
-                const classList = event.target.classList;
-                //check and stop propagation
-                const isFlatpickr = checkList.some((item) => classList.contains(item));
-                if (isFlatpickr) {
-                    event.stopPropagation();
-                    console.log("Is Flat");
-                    return;
-                }
-                console.log(event);
                 setToggleTaskBar(false);
             }
         };
@@ -52,17 +21,15 @@ export default function TaskBar({ openTaskBar, setToggleTaskBar }) {
         };
     }, [openTaskBar]);
 
-    const toggleFlatpickrTime = () => {
-        if (flatPickerTimeRef.current?.flatpickr?.isOpsen) {
-            flatPickerTimeRef.current?.flatpickr.close();
-        } else flatPickerTimeRef.current?.flatpickr.open();
-    };
+    function onSubmit(form) {
+        console.log(form);
+    }
     return (
         <div
             ref={taskBarRef}
-            className="fixed border z-1 bg-white border-gray-300 p-2 w-[60vw] h-fit top-[20%] left-[20%]  shadow-lg/50 rounded-2xl"
+            className="fixed border z-1 bg-white border-gray-300 dark:bg-black dark:text-white p-2 w-[60vw] h-fit top-[20%] left-[20%]  shadow-lg/50 rounded-2xl"
         >
-            <form action="" className="flex flex-col">
+            <form action={onSubmit} className="flex flex-col">
                 <input
                     name="taskTitle"
                     type="text"
@@ -76,74 +43,59 @@ export default function TaskBar({ openTaskBar, setToggleTaskBar }) {
                     placeholder="Description"
                 />
                 <div className="relative flex gap-2 w-fit mt-2">
-                    <button
-                        type="button"
-                        onClick={toggleFlatpickr}
-                        className="border p-2 hover:bg-gray-300 cursor-pointer active:font-bold"
-                    >
-                        {" "}
-                        Date :{" "}
-                        {date.toLocaleString("en-GB", {
-                            day: "numeric",
-                            month: "short",
-                        })}
-                    </button>
-                    <button
-                        type="button"
-                        onClick={toggleFlatpickrTime}
-                        className="border p-2 hover:bg-gray-300 cursor-pointer active:font-bold"
-                    >
-                        {" "}
-                        Time :{" "}
-                        {time.toLocaleString("en-GB", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                            hour12: true,
-                        })}
-                    </button>
-                    <Flatpickr
-                        ref={flatPickerRef}
-                        value={date}
-                        onChange={(selectedDates) => {
-                            setDate(selectedDates[0]);
-                        }}
-                        options={{
-                            clickOpens: false,
-                            disableMobile: true,
-                        }}
-                        className="absolute left-0"
-                        style={{
-                            pointerEvents: "none",
-                            opacity: 0,
-                            width: 0,
-                            overflow: "hidden",
-                        }}
-                    />
-                    <Flatpickr
-                        ref={flatPickerTimeRef}
-                        value={time}
-                        onChange={(d) => setTime(d[0])}
-                        options={{
-                            enableTime: true,
-                            noCalendar: true,
-                            dateFormat: "H:i",
-                            time_24hr: false,
-                            clickOpens: false,
-                            disableMobile: true,
-                        }}
-                        style={{
-                            pointerEvents: "none",
-                            opacity: 0,
-                            width: 0,
-                            overflow: "hidden",
-                        }}
-                    />
+                    <DatePicker className="w-60" name="date">
+                        <Label>Date</Label>
+                        <DateField.Group fullWidth>
+                            <DateField.Input>
+                                {(segment) => <DateField.Segment segment={segment} />}
+                            </DateField.Input>
+                            <DateField.Suffix>
+                                <DatePicker.Trigger>
+                                    <DatePicker.TriggerIndicator />
+                                </DatePicker.Trigger>
+                            </DateField.Suffix>
+                        </DateField.Group>
+                        <DatePicker.Popover>
+                            <Calendar aria-label="Event date">
+                                <Calendar.Header>
+                                    <Calendar.YearPickerTrigger>
+                                        <Calendar.YearPickerTriggerHeading />
+                                        <Calendar.YearPickerTriggerIndicator />
+                                    </Calendar.YearPickerTrigger>
+                                    <Calendar.NavButton slot="previous" />
+                                    <Calendar.NavButton slot="next" />
+                                </Calendar.Header>
+                                <Calendar.Grid>
+                                    <Calendar.GridHeader>
+                                        {(day) => <Calendar.HeaderCell>{day}</Calendar.HeaderCell>}
+                                    </Calendar.GridHeader>
+                                    <Calendar.GridBody>
+                                        {(date) => <Calendar.Cell date={date} />}
+                                    </Calendar.GridBody>
+                                </Calendar.Grid>
+                                <Calendar.YearPickerGrid>
+                                    <Calendar.YearPickerGridBody>
+                                        {({ year }) => <Calendar.YearPickerCell year={year} />}
+                                    </Calendar.YearPickerGridBody>
+                                </Calendar.YearPickerGrid>
+                            </Calendar>
+                        </DatePicker.Popover>
+                    </DatePicker>
+                    <TimeField className="w-[256px]" name="time">
+                        <Label>Time</Label>
+                        <TimeField.Group>
+                            <TimeField.Input>
+                                {(segment) => <TimeField.Segment segment={segment} />}
+                            </TimeField.Input>
+                        </TimeField.Group>
+                    </TimeField>
                 </div>
             </form>
+
             <button type="button" className="border p-2 relative">
                 <span onClick={() => setToggleList(!toggleList)}>The Button</span>
                 {toggleList && (
-                    <div className="border-2 absolute top-full left-[20%] bg-white">
+                    <div className="border-2 absolute top-full left-[20%] bg-white dark:bg-black dark:text-white">
                         <ul>
                             <li>First</li>
                             <li>Second</li>

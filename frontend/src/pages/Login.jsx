@@ -15,7 +15,7 @@ import {
 export default function Login() {
     const [, , , , login] = useUser();
     function onSubmit(e) {
-        e.preventDefault()
+        e.preventDefault();
     }
     return (
         <div className="w-full justify-center grid grid-cols-2 h-screen">

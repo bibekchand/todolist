@@ -9,6 +9,7 @@ import InboxIcon from "../assests/inbox.svg?react";
 import SearchBar from "./SearchBar.jsx";
 import TaskBar from "./TaskBar.jsx";
 import AddProjects from "./AddProjects.jsx";
+import { ChevronRight, Plus } from "@gravity-ui/icons";
 const projectsList = [
     "First",
     "Second",
@@ -31,11 +32,11 @@ export default function Sidebar({ toggleSidebar, setToggleSidebar }) {
                 {" "}
                 {toggleSidebar || (
                     <button
-                        className="cursor-pointer"
+                        className="cursor-pointer "
                         type="button"
                         onClick={() => setToggleSidebar(!toggleSidebar)}
                     >
-                        <SideBarIcon className="fill-black" />
+                        <SideBarIcon className="fill-black dark:fill-white" />
                     </button>
                 )}
             </div>
@@ -46,7 +47,7 @@ export default function Sidebar({ toggleSidebar, setToggleSidebar }) {
                 ></div>
             )}
             <div
-                className={`flex p-2 h-screen fixed flex-col top-0 gap-5 overflow-scroll transition-transform duration-500 ease-in-out bg-gray-100 md:sticky opacity-90 grow-0 ${toggleSidebar ? "translate-x-0" : " -translate-x-full"}`}
+                className={`dark:bg-black dark:text-white flex p-2 h-screen fixed flex-col top-0 gap-5 overflow-scroll transition-transform duration-500 ease-in-out bg-gray-100 md:sticky opacity-90 grow-0 ${toggleSidebar ? "translate-x-0" : " -translate-x-full"}`}
             >
                 <div className="flex items-center gap-5">
                     <div className="flex rounded-[5px] items-center gap-2 p-2 hover:bg-gray-500 duration-200 ease-in-out cursor-pointer">
@@ -56,10 +57,10 @@ export default function Sidebar({ toggleSidebar, setToggleSidebar }) {
                         <span>{username}</span>
                         <span className="rotate-90"> &gt;</span>
                     </div>
-                    <NotificationIcon className="fill-black hover:fill-gray-300 duration-100 ease-in-out cursor-pointer" />
+                    <NotificationIcon className="fill-black hover:fill-gray-300 dark:fill-white  dark:hover:fill-gray-300 duration-100 ease-in-out cursor-pointer" />
                     <SideBarIcon
                         onClick={() => setToggleSidebar(!toggleSidebar)}
-                        className="fill-black hover:fill-gray-300  duration-100 ease-in-out cursor-pointer"
+                        className="fill-black hover:fill-gray-300  dark:fill-white  dark:hover:fill-gray-300 duration-100 ease-in-out cursor-pointer"
                     />
                 </div>
                 <div>
@@ -69,14 +70,14 @@ export default function Sidebar({ toggleSidebar, setToggleSidebar }) {
                                 setToggleTaskBar(!openTaskBar);
                                 e.stopPropagation();
                             }}
-                            className="active:bg-amber-300 rounded-[5px] flex gap-2 justify-start cursor-pointer hover:bg-gray-200 duration-200 ease-in-out p-2"
+                            className="active:bg-amber-300 rounded-[5px] flex gap-2 justify-start cursor-pointer dark:hover:bg-gray-500  hover:bg-gray-200 duration-200 ease-in-out p-2"
                         >
                             <AddIcon className="fill-blue-500" />
                             Add Task
                         </li>
                         <li
                             onClick={() => setToggleSearchBar(!toggleSearchBar)}
-                            className="active:bg-amber-300  rounded-[5px] flex gap-2 justify-start cursor-pointer hover:bg-gray-200 duration-200 ease-in-out p-2"
+                            className="active:bg-amber-300  rounded-[5px] flex gap-2 justify-start cursor-pointer dark:hover:bg-gray-500 hover:bg-gray-200 duration-200 ease-in-out p-2"
                         >
                             <SearchIcon className="fill-blue-500" />
                             Search
@@ -84,26 +85,26 @@ export default function Sidebar({ toggleSidebar, setToggleSidebar }) {
 
                         <Link to="/inbox">
                             {" "}
-                            <li className="active:bg-amber-300 rounded-[5px] flex gap-2 justify-start cursor-pointer hover:bg-gray-200 duration-200 ease-in-out p-2">
+                            <li className="active:bg-amber-300 rounded-[5px] flex gap-2 justify-start cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-500 duration-200 ease-in-out p-2">
                                 <InboxIcon className="fill-blue-500" />
                                 Inbox
                             </li>
                         </Link>
 
-                        <li className=" mt-3 active:bg-amber-300 rounded-[5px] flex gap-2 justify-start cursor-pointer hover:bg-gray-200 duration-200 ease-in-out p-2">
+                        <li className=" mt-3 dark:hover:bg-gray-500 active:bg-amber-300 rounded-[5px] flex gap-2 justify-start cursor-pointer hover:bg-gray-200 duration-200 ease-in-out p-2">
                             My Projects
                             <div
-                                className="ml-auto rounded-[5px] mr-2 text-2xl hover:bg-gray-500 pl-2 pr-2"
+                                className="ml-auto rounded-[5px] mr-2 text-2xl hover:bg-gray-600 pl-1 pr-1 pt-1 pb"
                                 onClick={() => setOpenAddProject(!openAddProject)}
                             >
-                                +
+                                <Plus />
                             </div>
                             <button
                                 type="button"
                                 onClick={() => setToggleProjectsList(!toggleProjectsList)}
                                 className={`${toggleProjectsList ? "rotate-90" : ""} text-2xl rounded-[5px] hover:bg-gray-500 pl-2 pr-2 ease-in-out duration-200`}
                             >
-                                &gt;
+                                <ChevronRight />
                             </button>
                         </li>
                     </ul>
@@ -115,7 +116,7 @@ export default function Sidebar({ toggleSidebar, setToggleSidebar }) {
                                 return (
                                     <li
                                         key={item}
-                                        className="hover:bg-gray-200 pl-2 rounded-[5px] p-2 cursor-pointer"
+                                        className="hover:bg-gray-600 dark:hover:bg-gray-500 pl-2 rounded-[5px] p-2 cursor-pointer"
                                     >
                                         <span className="text-purple-600">#</span> {item}
                                     </li>

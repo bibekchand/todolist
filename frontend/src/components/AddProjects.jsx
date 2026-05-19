@@ -1,9 +1,8 @@
 import { useEffect } from "react";
 export default function AddProjects({ setOpenAddProjects }) {
     return (
-        <>
             <div
-                className={`fixed top-[30%] bg-white  rounded-[10px] p-2 left-[30%] shadow-gray-700 shadow-lg/80`}
+                className={` dark:bg-black dark:text-white fixed top-[30%] bg-white  rounded-[10px] p-2 left-[30%] shadow-gray-700 shadow-lg/80`}
             >
                 <form action="" className="flex flex-col">
                     <label
@@ -35,6 +34,5 @@ export default function AddProjects({ setOpenAddProjects }) {
                     </button>
                 </div>
             </div>
-        </>
     );
 }
